@@ -1,4 +1,8 @@
-from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import *
+from Utilities import Utilities
 
 class Bet365:
 
@@ -7,30 +11,41 @@ class Bet365:
     def scrapeBet365(self):
         odds_decoded=[]
         countries_decoded=[]
+        scrape_results = []
 
-        myProxy = "178.79.188.251:80"
+        driver = Utilities.getWebDriverWithoutProfile()
 
-        proxy = webdriver.common.proxy.Proxy({
-            'proxyType': webdriver.common.proxy.ProxyType.MANUAL,
-            'httpProxy': myProxy,
-            'ftpProxy': myProxy,
-            'sslProxy': myProxy
-        })
+        try:
+            driver.get('https://mobile.bet365.com/#type=Coupon;key=1-172-1-26326924-2-4-0-0-1-0-0-4063-0-0-1-0-0-0-0-0-75-0-0;ip=0;lng=1;anim=1')
+            WebDriverWait(driver, Utilities.getWebDriverDefaultWait()).until(EC.presence_of_element_located((By.CLASS_NAME, "podEventRowe")))
+            odds = driver.find_elements_by_xpath("//*[contains(@class,'podEventRow')]//*[@class='odds']")
+            countries = driver.find_elements_by_xpath("//*[contains(@class,'podEventRow')]//*[@class='opp']")
+            for odd in odds:
+                data = odd.text
+                data = data.strip()
+                odds_decoded.append(data)
 
-        driver = webdriver.Firefox(proxy=proxy)
-        driver.implicitly_wait(6)
-        driver.get('https://mobile.bet365.com/#type=Coupon;key=1-172-1-26326924-2-4-0-0-1-0-0-4063-0-0-1-0-0-0-0-0-75-0-0;ip=0;lng=1;anim=1')
-        odds = driver.find_elements_by_xpath("//*[contains(@class,'podEventRow')]//*[@class='odds']")
-        countries = driver.find_elements_by_xpath("//*[contains(@class,'podEventRow')]//*[@class='opp']")
-        for odd in odds:
-            data = odd.text
-            print(data)
-            odds_decoded.append(data)
+            for country in countries:
+                data = country.text
+                data = data.strip()
+                countries_decoded.append(data)
 
-        for country in countries:
-            data = country.text
-            data = data[:-5]
-            countries_decoded.append(data)
+        except NoSuchElementException as ex:
+            print("Exception at PaddyPower.py")
+            print("The element could not be located or the xpath has changed.")
+            print("If this is not the case, try increasing the timeout to allow more time for the website to load.")
+            print("Error Message:")
+            print(ex)
 
-        print(odds_decoded)
-        print(countries_decoded)
+        except TimeoutException as ex:
+            print("The connection has been lost. Proxy addresses change regularly, so try with a new address")
+            print("Error Message:")
+            print(ex)
+
+        except:
+            print("Unchecked Error Occured")
+
+
+        scrape_results.append(countries_decoded)
+        scrape_results.append(odds_decoded)
+        return scrape_results
