@@ -3,20 +3,21 @@ from WilliamHill import WilliamHill
 from selenium import webdriver
 from PaddyPower import PaddyPower
 from SkyBet import SkyBet
+from Utilities import Utilities
 import numpy as np
 import pandas as pd
-
+import time
 
 
 class CoolScrawler:
     def main():
-        A = np.zeros((6, 6))
+
 
         fbot = Bet365()
-        result_PaddyPower = fbot.scrapeBet365()
+        result_Bet365 = fbot.scrapeBet365()
 
         fbot1 = WilliamHill()
-        result_PaddyPower = fbot1.scrapeWilliamHill()
+        result_WilliamHill = fbot1.scrapeWilliamHill()
 
         fbot2 = PaddyPower()
         result_PaddyPower = fbot2.scrapePaddyPower()
@@ -24,9 +25,14 @@ class CoolScrawler:
         fbot3 = SkyBet()
         result_SkyBet = fbot3.scrapeSkyBet()
 
+        result_matrix = Utilities.createResultArray(result_WilliamHill, result_Bet365, result_SkyBet, result_PaddyPower)
+        print(result_matrix)
+        saved_file_name = time.strftime("%Y%m%d-%H%M%S") + '_results'
+        print(saved_file_name)
+        result_matrix.to_csv(Utilities.getResultsPath() + saved_file_name +'.csv', index=True, header=True, sep=' ')
 
-        names = [_ for _ in 'abcdef']
-        df = pd.DataFrame(A, indx=names, columns=names)
+
+
 
     if __name__ == "__main__":
         main()

@@ -19,7 +19,7 @@ class SkyBet:
         try:
             driver.get('https://m.skybet.com/football/competitions')
             driver.implicitly_wait(2)
-            WebDriverWait(driver, Utilities.getWebDriverDefaultWait()).until(EC.presence_of_element_located((By.CLASS_NAME, "js-page__cookies-accept")))
+            WebDriverWait(driver, int(Utilities.getWebDriverDefaultWait())).until(EC.presence_of_element_located((By.CLASS_NAME, "js-page__cookies-accept")))
             cookie_agreement_button_xpath = "//a[contains(@class,'js-page__cookies-accept')]"
             cookie_agreement_button = driver.find_element_by_xpath(cookie_agreement_button_xpath)
             cookie_agreement_button.click()
@@ -68,12 +68,16 @@ class SkyBet:
             print(ex)
 
         except TimeoutException as ex:
+            print("Exception at SkyBet.py")
             print("The connection has been lost. Proxy addresses change regularly, so try with a new address")
             print("Error Message:")
             print(ex)
 
-        except:
+
+        except Exception as ex:
+            print("Exception at SkyBet.py")
             print("Unchecked Error Occured")
+            print(ex)
 
         scrape_results.append(countries_decoded)
         scrape_results.append(odds_decoded)

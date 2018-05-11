@@ -7,6 +7,8 @@ class WilliamHill:
 
 
     def scrapeWilliamHill(self):
+
+        print("Scraping From WilliamHill started.")
         odds_decoded=[]
         countries_decoded=[]
         scrape_results = []
@@ -28,11 +30,15 @@ class WilliamHill:
                 data = Utilities.removeEscapeData(country)
                 data = data.strip()
                 countries_decoded.append(data)
-        except:
+
+        except Exception as ex:
+            print("Exception at WilliamHill.py")
             print("Unchecked Error Occured")
+            print(ex)
 
         scrape_results.append(countries_decoded)
         scrape_results.append(odds_decoded)
+        print(scrape_results)
         return scrape_results
 
 

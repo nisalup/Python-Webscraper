@@ -1,5 +1,7 @@
 from selenium import webdriver
 import configparser
+import numpy as np
+import pandas as pd
 
 class Utilities:
 
@@ -60,4 +62,54 @@ class Utilities:
         WEB_DRIVER_WAIT = config['DEFAULT']['WEB_DRIVER_WAIT']
         return WEB_DRIVER_WAIT
 
+    @staticmethod
+    def createResultArray(result_WilliamHill, result_Bet365, result_SkyBet, result_PaddyPower):
+
+        countries = ['Brazil', 'Germany', 'France', 'Spain', 'Argentina', 'Belgium', 'England', 'Portugal', 'Uruguay',
+                     'Croatia', 'Colombia', 'Poland', 'Russia', 'Denmark', 'Mexico', 'Switzerland', 'Egypt', 'Nigeria',
+                     'Senegal', 'Serbia', 'Sweden', 'Peru', 'Iceland', 'Japan', 'Costa Rica', 'Morocco', 'South Korea',
+                     'Australia', 'Iran', 'Tunisia', 'Panama', 'Saudi Arabia']
+        countries = sorted(countries)
+        scraped_sites = ['William Hill', 'Bet365', 'SkyBet', 'PaddyPower']
+
+        A = np.zeros((32, 4))
+
+        i = 0
+        if len(result_WilliamHill[1]) == 32:
+
+            for item in A.T[0]:
+                item = result_WilliamHill[1][i]
+                i += 1
+
+        i = 0
+        if len(result_Bet365[1]) == 32:
+
+            for item in A.T[1]:
+                item = result_Bet365[1][i]
+                i += 1
+
+        i = 0
+        if len(result_SkyBet[1]) == 32:
+
+            for item in A.T[2]:
+                item = result_SkyBet[1][i]
+                i += 1
+
+        i = 0
+        if len(result_PaddyPower[1]) == 32:
+
+            for item in A.T[3]:
+                item = result_PaddyPower[1][i]
+                i += 1
+
+        df = pd.DataFrame(A, index=countries, columns=scraped_sites)
+
+        return df
+
+    @staticmethod
+    def getResultsPath():
+        config = configparser.ConfigParser()
+        config.read('config.ini')
+        RESULT_PATH = config['DEFAULT']['RESULT_PATH']
+        return RESULT_PATH
 
