@@ -7,11 +7,14 @@ from Utilities import Utilities
 import numpy as np
 import pandas as pd
 import time
+import datetime
 
 
 class CoolScrawler:
     def main():
-
+        print('================================================')
+        print('Started Crawl at ' + str(datetime.datetime.now()))
+        print('================================================')
 
         fbot = Bet365()
         result_Bet365 = fbot.scrapeBet365()
