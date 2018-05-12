@@ -72,6 +72,8 @@ class Utilities:
                 temp_array = []
                 for country in countries:
                     if country in result_dict[scraped_site]:
+                        if country == 'southkorea' and result_dict[scraped_site][country] == 'korearepublic':
+                            country = 'korearepublic'
                         temp_array.append(result_dict[scraped_site][country])
                     else:
                         temp_array.append('NA')
@@ -93,3 +95,4 @@ class Utilities:
         config.read('config.ini')
         RESULT_PATH = config['DEFAULT']['RESULT_PATH']
         return RESULT_PATH
+
