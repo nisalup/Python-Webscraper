@@ -17,7 +17,7 @@ class Utilities:
         config.read('config.ini')
         PROXY_PORT = config['DEFAULT']['PROXY_PORT']
         PROXY_HOST = config['DEFAULT']['PROXY_HOST']
-        fp.set_preference('network.proxy.type', 1)
+        fp.set_preference('network.proxy.type', 0)
         fp.set_preference('network.proxy.http', PROXY_HOST)
         fp.set_preference('network.proxy.http_port', int(PROXY_PORT))
         fp.set_preference('network.proxy.https', PROXY_HOST)
@@ -28,7 +28,9 @@ class Utilities:
         fp.set_preference('network.proxy.ftp_port', int(PROXY_PORT))
         fp.set_preference('network.proxy.socks', PROXY_HOST)
         fp.set_preference('network.proxy.socks_port', int(PROXY_PORT))
-        fp.set_preference('general.useragent.override', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.75.14 (KHTML, like Gecko) Version/7.0.3 Safari/7046A194A')
+        fp.set_preference("general.useragent.override", "whater_useragent")
+
+
         fp.update_preferences()
         return webdriver.Firefox(firefox_profile=fp)
 
@@ -72,8 +74,6 @@ class Utilities:
                 temp_array = []
                 for country in countries:
                     if country in result_dict[scraped_site]:
-                        if country == 'southkorea' and result_dict[scraped_site][country] == 'korearepublic':
-                            country = 'korearepublic'
                         temp_array.append(result_dict[scraped_site][country])
                     else:
                         temp_array.append('NA')
@@ -84,7 +84,6 @@ class Utilities:
 
             A.append(temp_array)
 
-        print(A)
         np_arr = np.array(A)
         df = pd.DataFrame(np_arr.T, index=countries, columns=scraped_sites)
         return df

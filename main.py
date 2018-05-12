@@ -1,17 +1,19 @@
 from Bet365 import Bet365
 from WilliamHill import WilliamHill
-from selenium import webdriver
 from PaddyPower import PaddyPower
 from SkyBet import SkyBet
 from Utilities import Utilities
-import numpy as np
-import pandas as pd
 import time
 import datetime
 
 
 class CoolScrawler:
-    def main():
+    def __init__(self):
+        print('======================')
+        print('Cool Crawler Started')
+        print('======================')
+
+    def scrape(self):
         print('================================================')
         print('Started Crawl at ' + str(datetime.datetime.now()))
         print('================================================')
@@ -36,15 +38,16 @@ class CoolScrawler:
         print('============')
         print(result_matrix)
         saved_file_name = time.strftime("%Y%m%d-%H%M%S") + '_results'
-        print(saved_file_name)
-        result_matrix.to_csv(Utilities.getResultsPath() + saved_file_name +'.csv', index=True, header=True, sep=' ')
+        result_matrix.to_csv(Utilities.getResultsPath() + saved_file_name +'.csv', index=True, header=True, sep=';')
+
+    def start(self):
+        starttime = time.time()
+        while True:
+            self.scrape()
+            time.sleep(300.0 - ((time.time() - starttime) % 300.0))
 
 
-
-
-    if __name__ == "__main__":
-        main()
-
-
+c = CoolScrawler()
+c.start()
 
 

@@ -16,9 +16,10 @@ class Bet365:
         driver = Utilities.getWebDriverWithoutProfile()
         try:
             driver.get('https://mobile.bet365.com/#type=Coupon;key=1-172-1-26326924-2-4-0-0-1-0-0-4063-0-0-1-0-0-0-0-0-75-0-0;ip=0;lng=1;anim=1')
-            WebDriverWait(driver, int(Utilities.getWebDriverDefaultWait())).until(EC.presence_of_element_located((By.CLASS_NAME, 'podEventRowe')))
+            WebDriverWait(driver, int(Utilities.getWebDriverDefaultWait())).until(EC.presence_of_element_located((By.CLASS_NAME, 'podEventRow')))
             odds = driver.find_elements_by_xpath("//*[contains(@class,'podEventRow')]//*[@class='odds']")
             countries = driver.find_elements_by_xpath("//*[contains(@class,'podEventRow')]//*[@class='opp']")
+
             for odd in odds:
                 data = odd.text
                 data = data.strip()
@@ -55,5 +56,6 @@ class Bet365:
 
         print('Scrape results from Bet365:')
         print(scrape_results)
-        print('Scraping From Bet365 ended.')
+        print('Scraping from Bet365 ended.')
+        driver.quit()
         return scrape_results

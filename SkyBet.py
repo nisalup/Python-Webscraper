@@ -38,7 +38,7 @@ class SkyBet:
             load_more_button_xpath = "//a[@class='_1ey6ouwa']"
             load_more_button = driver.find_element_by_xpath(load_more_button_xpath)
             load_more_button.click()
-            driver.implicitly_wait(2)
+            driver.implicitly_wait(5)
             odds = driver.find_elements_by_xpath("//div[@class='_1m5cvgr']/div[2]/div/div/div[2]/div/span")
             countries = driver.find_elements_by_xpath("//div[@class='_1m5cvgr']/div[2]/div/div/div/div[not(contains(@class,'_1v3logkf'))]")
             for odd in odds:
@@ -51,6 +51,8 @@ class SkyBet:
                 data = data.strip()
                 data = regex.sub('', data).lower()
                 data = re.sub(r'\s+', '', data)
+                if data == 'korearepublic':
+                    data = 'southkorea'
                 countries_decoded.append(data)
 
         except NoSuchElementException as ex:
@@ -78,4 +80,6 @@ class SkyBet:
         print('Scrape results from SkyBet:')
         print(scrape_results)
         print('Scraping From SkyBet ended.')
+        driver.quit()
+
         return scrape_results

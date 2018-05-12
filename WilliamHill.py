@@ -16,6 +16,7 @@ class WilliamHill:
             tree = html.fromstring(page.content)
             odds = tree.xpath("//table[@class='tableData']//tbody//td[@scope='col']//div[@class='eventprice']/text()")
             countries = tree.xpath("//table[@class='tableData']//tbody//td[@scope='col']//div[@class='eventselection']/text()")
+
             for odd in odds:
                 data = Utilities.removeEscapeData(odd)
                 data = data.strip()
@@ -42,4 +43,5 @@ class WilliamHill:
         print('Scrape results from Williamhill:')
         print(scrape_results)
         print('Scraping From Williamhill ended.')
+
         return scrape_results

@@ -25,6 +25,7 @@ class PaddyPower:
             driver.implicitly_wait(2)
             odds = driver.find_elements_by_xpath("//div[contains(@class, 'card-container') and contains(.//div, 'World Cup Outrights')]//div[contains(@class, 'grid outright-item')]//button[contains(@class, 'btn-odds')]")
             countries = driver.find_elements_by_xpath("//div[contains(@class, 'card-container') and contains(.//div, 'World Cup Outrights')]//div[contains(@class, 'grid outright-item')]//p[contains(@class, 'outright-item__runner-name')]")
+            driver.quit()
             for odd in odds:
                 data = odd.text
                 data = data.strip()
@@ -62,4 +63,6 @@ class PaddyPower:
         print('Scrape results from PaddyPower:')
         print(scrape_results)
         print('Scraping From PaddyPower ended.')
+        driver.quit()
+
         return scrape_results
