@@ -25,7 +25,12 @@ class CoolScrawler:
         fbot3 = SkyBet()
         result_SkyBet = fbot3.scrapeSkyBet()
 
-        result_matrix = Utilities.createResultArray(result_WilliamHill, result_Bet365, result_SkyBet, result_PaddyPower)
+        result_dict = {'WilliamHill':result_WilliamHill, 'Bet365':result_Bet365, 'SkyBet':result_SkyBet, 'PaddyPower':result_PaddyPower}
+        result_matrix = Utilities.createResultArray(result_dict)
+
+        print('============')
+        print('Final Result')
+        print('============')
         print(result_matrix)
         saved_file_name = time.strftime("%Y%m%d-%H%M%S") + '_results'
         print(saved_file_name)
