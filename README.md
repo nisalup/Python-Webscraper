@@ -13,11 +13,15 @@ Python Webscraping code for different kinds of websites including country restri
 - Uses Python 3.6
 - You will need selenium webdriver (install using pip) and geckodriver
 - Before running the script, edit the config.ini file and add a proxy ip and port. You can get one here: https://free-proxy-list.net/uk-proxy.html, if the connection is slow, increase the wait time.
+- Also in the config file, change the path to the results folder (If using windows, give the absolute path)
 - And of course, mozilla installed in your PC
 
 ## What it does
 > This is just information for the evaluation. This information, and the xpaths will of course change soon. 
+
+> The resulting matrix is printed on screen and also saved as a csv in the results folder.
 - There are 4 websites in the scripts that are scrawled.
+
   ### WilliamHill
   This is a website that can be scraped without using selenium, by using requests in python. Straightforward.
   
