@@ -2,6 +2,8 @@ from selenium import webdriver
 import configparser, numpy as np, pandas as pd, re
 from Website import Website
 import re
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.action_chains import ActionChains
 
 class Utilities:
 
@@ -57,14 +59,32 @@ class Utilities:
         return WEB_DRIVER_WAIT
 
     @staticmethod
+    def getWebDriverJSDisabled():
+        fp = webdriver.FirefoxProfile()
+        fp.set_preference("browser.download.folderList", 2)
+        fp.set_preference("javascript.enabled", False)
+
+        browser = webdriver.Firefox(firefox_profile=fp)
+        browser.get("about:config")
+        actions = ActionChains(browser)
+        actions.send_keys(Keys.RETURN)
+        actions.send_keys("javascript.enabled")
+        actions.perform()
+        actions.send_keys(Keys.TAB)
+        actions.send_keys(Keys.RETURN)
+        actions.send_keys(Keys.F5)
+        actions.perform()
+        return browser
+
+    @staticmethod
     def createResultArray(result_dict):
         regex = re.compile('[^a-zA-Z]')
-        countries = [
+        countries_raw = [
          'Brazil', 'Germany', 'France', 'Spain', 'Argentina', 'Belgium', 'England', 'Portugal', 'Uruguay',
          'Croatia', 'Colombia', 'Poland', 'Russia', 'Denmark', 'Mexico', 'Switzerland', 'Egypt', 'Nigeria',
          'Senegal', 'Serbia', 'Sweden', 'Peru', 'Iceland', 'Japan', 'Costa Rica', 'Morocco', 'South Korea',
          'Australia', 'Iran', 'Tunisia', 'Panama', 'Saudi Arabia']
-        countries = sorted(countries)
+        countries = sorted(countries_raw)
         for i, country in enumerate(countries):
             country = regex.sub('', country).lower()
             countries[i] = re.sub('\\s+', '', country)
@@ -87,7 +107,7 @@ class Utilities:
             A.append(temp_array)
 
         np_arr = np.array(A)
-        df = pd.DataFrame(np_arr.T, index=countries, columns=scraped_sites)
+        df = pd.DataFrame(np_arr.T, index=countries_raw, columns=scraped_sites)
         return df
 
     @staticmethod
@@ -107,7 +127,7 @@ class Utilities:
         for odd in odds:
             data = ''
             if websiteID == Website.WILLIAMHILL:
-                data = Utilities.removeEscapeData(odd)
+                data = Utilities.removeEscapeData(odd.text)
             else:
                 data = odd.text
             data = data.strip()
@@ -116,7 +136,7 @@ class Utilities:
         for country in countries:
             data = ''
             if websiteID == Website.WILLIAMHILL:
-                data = Utilities.removeEscapeData(country)
+                data = Utilities.removeEscapeData(country.text)
             else:
                 data = country.text
             data = data.strip()
