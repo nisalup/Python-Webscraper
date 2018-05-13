@@ -4,16 +4,13 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import *
 from Utilities import Utilities
-import re
+from Website import Website
 
 class SkyBet:
 
     def scrapeSkyBet(self):
         print('Scraping From SkyBet started.')
-        odds_decoded = []
-        countries_decoded = []
         scrape_results = {}
-        regex = re.compile('[^a-zA-Z]')
         driver = webdriver.Firefox()
         try:
             driver.get('https://m.skybet.com/football/competitions')
@@ -41,19 +38,7 @@ class SkyBet:
             driver.implicitly_wait(5)
             odds = driver.find_elements_by_xpath("//div[@class='_1m5cvgr']/div[2]/div/div/div[2]/div/span")
             countries = driver.find_elements_by_xpath("//div[@class='_1m5cvgr']/div[2]/div/div/div/div[not(contains(@class,'_1v3logkf'))]")
-            for odd in odds:
-                data = odd.text
-                data = data.strip()
-                odds_decoded.append(data)
-
-            for country in countries:
-                data = country.text
-                data = data.strip()
-                data = regex.sub('', data).lower()
-                data = re.sub(r'\s+', '', data)
-                if data == 'korearepublic':
-                    data = 'southkorea'
-                countries_decoded.append(data)
+            scrape_results = Utilities.processResultData(odds, countries, Website.SKYBET)
 
         except NoSuchElementException as ex:
             print('Exception at SkyBet.py')
@@ -70,12 +55,6 @@ class SkyBet:
             print('Exception at SkyBet.py')
             print('Unchecked Error Occured')
             print(ex)
-
-        if len(countries_decoded) == len(odds_decoded):
-            i = 0
-            for item in countries_decoded:
-                scrape_results[item] = odds_decoded[i]
-                i += 1
 
         print('Scrape results from SkyBet:')
         print(scrape_results)

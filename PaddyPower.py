@@ -2,17 +2,14 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import *
-import re
 from Utilities import Utilities
+from Website import Website
 
 class PaddyPower:
 
     def scrapePaddyPower(self):
         print('Scraping From PaddyPower started.')
-        odds_decoded = []
-        countries_decoded = []
         scrape_results = {}
-        regex = re.compile('[^a-zA-Z]')
         driver = Utilities.getWebDriver()
         try:
             driver.get('https://www.paddypower.com/football?tab=world-cup-2018')
@@ -25,18 +22,7 @@ class PaddyPower:
             driver.implicitly_wait(2)
             odds = driver.find_elements_by_xpath("//div[contains(@class, 'card-container') and contains(.//div, 'World Cup Outrights')]//div[contains(@class, 'grid outright-item')]//button[contains(@class, 'btn-odds')]")
             countries = driver.find_elements_by_xpath("//div[contains(@class, 'card-container') and contains(.//div, 'World Cup Outrights')]//div[contains(@class, 'grid outright-item')]//p[contains(@class, 'outright-item__runner-name')]")
-            driver.quit()
-            for odd in odds:
-                data = odd.text
-                data = data.strip()
-                odds_decoded.append(data)
-
-            for country in countries:
-                data = country.text
-                data = data.strip()
-                data = regex.sub('', data).lower()
-                data = re.sub(r'\s+', '', data)
-                countries_decoded.append(data)
+            scrape_results = Utilities.processResultData(odds, countries, Website.PADDYPOWER)
 
         except NoSuchElementException as ex:
             print('Exception at PaddyPower.py')
@@ -54,11 +40,6 @@ class PaddyPower:
             print('Unchecked Error Occured')
             print(ex)
 
-        if len(countries_decoded) == len(odds_decoded):
-            i = 0
-            for item in countries_decoded:
-                scrape_results[item] = odds_decoded[i]
-                i += 1
 
         print('Scrape results from PaddyPower:')
         print(scrape_results)

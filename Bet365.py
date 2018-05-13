@@ -3,34 +3,20 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import *
 from Utilities import Utilities
-import re
+from Website import Website
 
 class Bet365:
 
     def scrapeBet365(self):
         print('Scraping From Bet365 started.')
-        odds_decoded = []
-        countries_decoded = []
         scrape_results = {}
-        regex = re.compile('[^a-zA-Z]')
         driver = Utilities.getWebDriverWithoutProfile()
         try:
             driver.get('https://mobile.bet365.com/#type=Coupon;key=1-172-1-26326924-2-4-0-0-1-0-0-4063-0-0-1-0-0-0-0-0-75-0-0;ip=0;lng=1;anim=1')
             WebDriverWait(driver, int(Utilities.getWebDriverDefaultWait())).until(EC.presence_of_element_located((By.CLASS_NAME, 'podEventRow')))
             odds = driver.find_elements_by_xpath("//*[contains(@class,'podEventRow')]//*[@class='odds']")
             countries = driver.find_elements_by_xpath("//*[contains(@class,'podEventRow')]//*[@class='opp']")
-
-            for odd in odds:
-                data = odd.text
-                data = data.strip()
-                odds_decoded.append(data)
-
-            for country in countries:
-                data = country.text
-                data = data.strip()
-                data = regex.sub('', data).lower()
-                data = re.sub(r'\s+', '', data)
-                countries_decoded.append(data)
+            scrape_results = Utilities.processResultData(odds, countries, Website.BET365)
 
         except NoSuchElementException as ex:
             print('Exception at Bet365.py')
@@ -47,12 +33,6 @@ class Bet365:
             print('Exception at Bet365.py')
             print('Unchecked Error Occured')
             print(ex)
-
-        if len(countries_decoded) == len(odds_decoded):
-            i = 0
-            for item in countries_decoded:
-                scrape_results[item] = odds_decoded[i]
-                i += 1
 
         print('Scrape results from Bet365:')
         print(scrape_results)

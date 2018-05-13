@@ -1,5 +1,7 @@
 from selenium import webdriver
 import configparser, numpy as np, pandas as pd, re
+from Website import Website
+import re
 
 class Utilities:
 
@@ -94,4 +96,42 @@ class Utilities:
         config.read('config.ini')
         RESULT_PATH = config['DEFAULT']['RESULT_PATH']
         return RESULT_PATH
+
+    @staticmethod
+    def processResultData(odds, countries, websiteID):
+
+        regex = re.compile('[^a-zA-Z]')
+        odds_decoded = []
+        countries_decoded = []
+        scrape_results = {}
+        for odd in odds:
+            data = ''
+            if websiteID == Website.WILLIAMHILL:
+                data = Utilities.removeEscapeData(odd)
+            else:
+                data = odd.text
+            data = data.strip()
+            odds_decoded.append(data)
+
+        for country in countries:
+            data = ''
+            if websiteID == Website.WILLIAMHILL:
+                data = Utilities.removeEscapeData(country)
+            else:
+                data = country.text
+            data = data.strip()
+            data = regex.sub('', data).lower()
+            data = re.sub(r'\s+', '', data)
+            if data == 'korearepublic' and websiteID == Website.SKYBET:
+                data = 'southkorea'
+            countries_decoded.append(data)
+
+
+        if len(countries_decoded) == len(odds_decoded):
+            i = 0
+            for item in countries_decoded:
+                scrape_results[item] = odds_decoded[i]
+                i += 1
+
+        return scrape_results
 
