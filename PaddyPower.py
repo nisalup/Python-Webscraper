@@ -44,6 +44,6 @@ class PaddyPower:
         print('Scrape results from PaddyPower:')
         print(scrape_results)
         print('Scraping From PaddyPower ended.')
-        # driver.quit()
+        driver.quit()
 
         return scrape_results
