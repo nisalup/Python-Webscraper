@@ -5,6 +5,7 @@ from SkyBet import SkyBet
 from Utilities import Utilities
 import time
 import datetime
+from multiprocessing.pool import ThreadPool
 
 
 class CoolScrawler:
@@ -19,16 +20,28 @@ class CoolScrawler:
         print('================================================')
 
         fbot = Bet365()
-        result_Bet365 = fbot.scrapeBet365()
+        # result_Bet365 = fbot.scrapeBet365()
 
         fbot1 = WilliamHill()
-        result_WilliamHill = fbot1.scrapeWilliamHill()
+        # result_WilliamHill = fbot1.scrapeWilliamHill()
 
         fbot2 = PaddyPower()
-        result_PaddyPower = fbot2.scrapePaddyPower()
+        # result_PaddyPower = fbot2.scrapePaddyPower()
 
         fbot3 = SkyBet()
-        result_SkyBet = fbot3.scrapeSkyBet()
+        # result_SkyBet = fbot3.scrapeSkyBet()
+
+        pool = ThreadPool(processes=4)
+        thread1 = pool.apply_async(fbot.scrapeBet365, ())
+        thread2 = pool.apply_async(fbot1.scrapeWilliamHill, ())
+        thread3 = pool.apply_async(fbot2.scrapePaddyPower, ())
+        thread4 = pool.apply_async(fbot3.scrapeSkyBet, ())
+
+        result_Bet365 = thread1.get()
+        result_WilliamHill = thread2.get()
+        result_PaddyPower = thread3.get()
+        result_SkyBet = thread4.get()
+
 
         result_dict = {'WilliamHill':result_WilliamHill, 'Bet365':result_Bet365, 'SkyBet':result_SkyBet, 'PaddyPower':result_PaddyPower}
         result_matrix = Utilities.createResultArray(result_dict)

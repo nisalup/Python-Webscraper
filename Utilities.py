@@ -33,8 +33,6 @@ class Utilities:
         fp.set_preference('network.proxy.socks', PROXY_HOST)
         fp.set_preference('network.proxy.socks_port', int(PROXY_PORT))
         fp.set_preference("general.useragent.override", "whater_useragent")
-
-
         fp.update_preferences()
         return webdriver.Firefox(firefox_profile=fp)
 

@@ -10,7 +10,7 @@ class PaddyPower:
     def scrapePaddyPower(self):
         print('Scraping From PaddyPower started.')
         scrape_results = {}
-        driver = Utilities.getWebDriver()
+        driver = Utilities.getWebDriverWithoutProfile()
         try:
             driver.get('https://www.paddypower.com/football?tab=world-cup-2018')
             privacy_element = WebDriverWait(driver, int(Utilities.getWebDriverDefaultWait())).until(EC.presence_of_element_located((By.CLASS_NAME, 'ssc-privacyPolicyBannerButton')))
@@ -44,6 +44,6 @@ class PaddyPower:
         print('Scrape results from PaddyPower:')
         print(scrape_results)
         print('Scraping From PaddyPower ended.')
-        driver.quit()
+        # driver.quit()
 
         return scrape_results
